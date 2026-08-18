@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Vans AI Studio</title>
+<meta name="description" content="סטודיו יצירה חופשי: תמונות, וידאו, מוזיקה, תלת־ממד ומודלים — בלי מפתח API">
+<link rel="icon" type="image/png" href="assets/favicon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#0a0a13">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <svg class="logo" viewBox="0 0 48 48" aria-hidden="true">
+      <defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#7c3aed"/><stop offset="1" stop-color="#22d3ee"/>
+      </linearGradient></defs>
+      <rect x="2" y="2" width="44" height="44" rx="11" fill="url(#lg)"/>
+      <path d="M13 13 L24 36 L35 13" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="37" cy="11" r="3" fill="#fff"/>
+    </svg>
+    <div>
+      <h1>Vans AI Studio</h1>
+      <p class="tagline" data-i18n="tagline">סטודיו יצירה חופשי — בלי מפתח API</p>
+    </div>
+  </div>
+  <nav class="tabs" id="tabs">
+    <button class="tab active" data-tab="images"  data-i18n="tab_images">🎨 תמונות</button>
+    <button class="tab" data-tab="models"  data-i18n="tab_models">🧠 מודלים</button>
+    <button class="tab" data-tab="video"   data-i18n="tab_video">🎬 וידאו</button>
+    <button class="tab" data-tab="music"   data-i18n="tab_music">🎵 מוזיקה</button>
+    <button class="tab" data-tab="three"   data-i18n="tab_three">🧊 תלת־ממד</button>
+    <button class="tab" data-tab="about"   data-i18n="tab_about">⚙️ אודות</button>
+  </nav>
+  <button class="btn ghost small" id="btn-lang" title="Language">EN</button>
+</header>
+
+<main>
+
+<!-- ============ IMAGES ============ -->
+<section class="tab-panel active" id="tab-images">
+  <div class="split">
+    <div class="card form-card">
+      <h2 data-i18n="img_title">יצירת תמונה</h2>
+      <label data-i18n="lbl_prompt">מה ליצור? (אפשר גם בעברית)</label>
+      <textarea id="img-prompt" rows="4" data-i18n-ph="ph_img" placeholder="לדוגמה: חתול אסטרונאוט צף בחלל, כוכבים, צבעים חיים"></textarea>
+
+      <div class="row">
+        <div class="field">
+          <label data-i18n="lbl_model">מודל</label>
+          <select id="img-model"></select>
+        </div>
+        <div class="field">
+          <label data-i18n="lbl_size">גודל</label>
+          <select id="img-size">
+            <option value="1024x1024">1024 × 1024 (ריבוע)</option>
+            <option value="1280x720">1280 × 720 (רוחב)</option>
+            <option value="720x1280">720 × 1280 (גובה)</option>
+            <option value="1536x640">1536 × 640 (פנורמה)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="field">
+          <label data-i18n="lbl_count">כמות</label>
+          <select id="img-count">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="4" selected>4</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Seed</label>
+          <div class="seed-row">
+            <input type="number" id="img-seed" value="42">
+            <label class="check"><input type="checkbox" id="img-random-seed" checked> <span data-i18n="lbl_random">אקראי</span></label>
+          </div>
+        </div>
+      </div>
+
+      <label class="check"><input type="checkbox" id="img-enhance"> <span data-i18n="lbl_enhance">שיפור פרומפט אוטומטי במנוע (מומלץ לעברית)</span></label>
+
+      <div class="btn-row">
+        <button class="btn primary" id="btn-generate" data-i18n="btn_generate">✨ צור תמונות</button>
+        <button class="btn ghost" id="btn-enhance" data-i18n="btn_enhance">🪄 שפר פרומפט</button>
+      </div>
+      <p class="hint" data-i18n="img_hint">חינם לחלוטין, ללא מפתח API. היצירה אורכת 5–30 שניות לתמונה.</p>
+    </div>
+
+    <div class="results-col">
+      <div class="grid" id="img-results"></div>
+      <div class="gallery-head">
+        <h3 data-i18n="gallery_title">גלריה</h3>
+        <button class="btn ghost small" id="btn-clear-gallery" data-i18n="btn_clear">ניקוי גלריה</button>
+      </div>
+      <div class="grid small-grid" id="img-gallery"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MODELS ============ -->
+<section class="tab-panel" id="tab-models">
+  <div class="card">
+    <div class="cardbar">
+      <h2 data-i18n="models_title">מודלים</h2>
+      <div class="btn-row">
+        <button class="btn primary" id="btn-new-model" data-i18n="btn_new_model">➕ צור מודל חדש</button>
+        <button class="btn ghost" id="btn-import-model" data-i18n="btn_import">📥 ייבוא מודל מקובץ</button>
+        <input type="file" id="model-file" accept=".json,.vansmodel" hidden>
+      </div>
+    </div>
+    <p class="hint" data-i18n="models_hint">מודל של Vans AI Studio הוא פרופיל סגנון חכם שרץ מעל מנועי יצירה פתוחים (Flux / Turbo). אפשר ליצור, לייצא כקובץ, לשתף ולייבא — ואז להשתמש בו ביצירת תמונות ווידאו.</p>
+  </div>
+
+  <h3 class="sec-title" data-i18n="my_models">המודלים שלי</h3>
+  <div class="grid models-grid" id="my-models"></div>
+
+  <h3 class="sec-title" data-i18n="catalog_title">קטלוג מודלים מובנים (מוכנים לשימוש ולהורדה)</h3>
+  <div class="grid models-grid" id="model-catalog"></div>
+</section>
+
+<!-- ============ VIDEO ============ -->
+<section class="tab-panel" id="tab-video">
+  <div class="split">
+    <div class="card form-card">
+      <h2 data-i18n="vid_title">יצירת סרטון</h2>
+      <label data-i18n="lbl_prompt_vid">תיאור הסרטון</label>
+      <textarea id="vid-prompt" rows="3" data-i18n-ph="ph_vid" placeholder="לדוגמה: שקיעה מעל האוקיינוס, גלים, עננים צבעוניים"></textarea>
+
+      <div class="row">
+        <div class="field">
+          <label data-i18n="lbl_model">מודל</label>
+          <select id="vid-model"></select>
+        </div>
+        <div class="field">
+          <label data-i18n="lbl_aspect">יחס</label>
+          <select id="vid-aspect">
+            <option value="1280x720">16:9 (רוחב)</option>
+            <option value="720x1280">9:16 (סטורי)</option>
+            <option value="960x960">1:1 (ריבוע)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="field">
+          <label data-i18n="lbl_scenes">סצנות</label>
+          <select id="vid-scenes">
+            <option value="3">3</option>
+            <option value="4" selected>4</option>
+            <option value="6">6</option>
+            <option value="8">8</option>
+          </select>
+        </div>
+        <div class="field">
+          <label data-i18n="lbl_scene_sec">שניות לסצנה</label>
+          <select id="vid-scene-sec">
+            <option value="2">2</option>
+            <option value="3" selected>3</option>
+            <option value="4">4</option>
+          </select>
+        </div>
+        <div class="field">
+          <label data-i18n="lbl_motion">תנועה</label>
+          <select id="vid-motion">
+            <option value="kenburns" data-i18n="mo_kenburns">קן ברנס (זום + פאן)</option>
+            <option value="zoomin" data-i18n="mo_zoomin">זום פנימה</option>
+            <option value="zoomout" data-i18n="mo_zoomout">זום החוצה</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn primary" id="btn-video" data-i18n="btn_video">🎬 צור סרטון</button>
+      </div>
+      <div class="progress hidden" id="vid-progress"><div class="bar"></div><span class="ptext"></span></div>
+      <p class="hint" data-i18n="vid_hint">הסרטון נבנה מסצנות AI עם תנועה קולנועית ומיוצא כקובץ WebM — בלי מפתח API.</p>
+    </div>
+    <div class="results-col">
+      <div id="vid-result" class="vid-result"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MUSIC ============ -->
+<section class="tab-panel" id="tab-music">
+  <div class="split">
+    <div class="card form-card">
+      <h2 data-i18n="mus_title">יצירת מוזיקה</h2>
+      <div class="row">
+        <div class="field">
+          <label data-i18n="lbl_genre">סגנון</label>
+          <select id="mus-genre">
+            <option value="lofi" data-i18n="g_lofi">Lo-Fi רגוע</option>
+            <option value="chip" data-i18n="g_chip">צ'יפטיון 8-ביט</option>
+            <option value="techno" data-i18n="g_techno">טכנו</option>
+            <option value="ambient" data-i18n="g_ambient">אמביינט</option>
+          </select>
+        </div>
+        <div class="field">
+          <label data-i18n="lbl_scale">סולם</label>
+          <select id="mus-scale">
+            <option value="" data-i18n="s_auto">אוטומטי לפי סגנון</option>
+            <option value="pent">מינור פנטטוני</option>
+            <option value="major">מז'ור</option>
+            <option value="dorian">דוריאן</option>
+            <option value="harm">מינור הרמוני</option>
+          </select>
+        </div>
+      </div>
+      <div class="row">
+        <div class="field">
+          <label><span data-i18n="lbl_tempo">קצב (BPM)</span> — <span id="mus-tempo-val">אוטו'</span></label>
+          <input type="range" id="mus-tempo" min="0" max="170" value="0" step="1">
+        </div>
+        <div class="field">
+          <label data-i18n="lbl_len">אורך</label>
+          <select id="mus-len">
+            <option value="15">15 שניות</option>
+            <option value="30" selected>30 שניות</option>
+            <option value="60">דקה</option>
+            <option value="120">2 דקות</option>
+          </select>
+        </div>
+      </div>
+      <div class="row">
+        <div class="field">
+          <label>Seed</label>
+          <div class="seed-row">
+            <input type="number" id="mus-seed" value="7">
+            <button class="btn ghost small" id="mus-dice">🎲</button>
+          </div>
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="btn primary" id="btn-music" data-i18n="btn_music">🎵 צור מוזיקה</button>
+      </div>
+      <div class="progress hidden" id="mus-progress"><div class="bar"></div><span class="ptext"></span></div>
+      <p class="hint" data-i18n="mus_hint">מנוע מוזיקה גנרטיבי שרץ אצלך במכשיר — מהיר, חינמי, ללא אינטרנט וללא מפתח API. ייצוא ל-WAV.</p>
+    </div>
+    <div class="results-col">
+      <div id="mus-result" class="mus-result"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 3D ============ -->
+<section class="tab-panel" id="tab-three">
+  <div class="split">
+    <div class="card form-card">
+      <h2 data-i18n="d3_title">יצירת מודל תלת־ממד</h2>
+      <div class="field">
+        <label data-i18n="lbl_d3_mode">סוג מודל</label>
+        <select id="d3-mode">
+          <option value="text" data-i18n="d3_text">שלט טקסט תלת־ממדי (גם עברית!)</option>
+          <option value="relief" data-i18n="d3_relief">תבליט / ליתופן מ-AI או מתמונה</option>
+          <option value="vase" data-i18n="d3_vase">ואזה פרמטרית</option>
+          <option value="shape" data-i18n="d3_shape">צורה בסיסית</option>
+        </select>
+      </div>
+
+      <div id="d3-panel-text" class="d3-panel">
+        <label data-i18n="lbl_d3_text">הטקסט</label>
+        <input type="text" id="d3-text" value="Vans">
+        <div class="row">
+          <div class="field"><label data-i18n="lbl_d3_height">גובה אותיות (מ"מ)</label><input type="number" id="d3-text-size" value="30" min="8" max="120"></div>
+          <div class="field"><label data-i18n="lbl_d3_depth">עומק הבלטה (מ"מ)</label><input type="number" id="d3-text-depth" value="6" min="1" max="30"></div>
+          <div class="field"><label data-i18n="lbl_d3_base">בסיס (מ"מ)</label><input type="number" id="d3-text-base" value="3" min="0" max="20"></div>
+        </div>
+      </div>
+
+      <div id="d3-panel-relief" class="d3-panel hidden">
+        <label data-i18n="lbl_d3_prompt">פרומפט ל-AI (או העלאת תמונה)</label>
+        <input type="text" id="d3-relief-prompt" data-i18n-ph="ph_relief" placeholder="לדוגמה: פני אריה, תבליט">
+        <div class="btn-row">
+          <button class="btn ghost small" id="d3-upload-btn" data-i18n="btn_upload_img">📤 תמונה משלי</button>
+          <input type="file" id="d3-file" accept="image/*" hidden>
+          <span class="hint" id="d3-file-name"></span>
+        </div>
+        <div class="row">
+          <div class="field"><label data-i18n="lbl_d3_width">רוחב (מ"מ)</label><input type="number" id="d3-relief-width" value="80" min="20" max="200"></div>
+          <div class="field"><label data-i18n="lbl_d3_relief_depth">עומק תבליט (מ"מ)</label><input type="number" id="d3-relief-depth" value="2.5" min="0.5" max="10" step="0.5"></div>
+          <div class="field"><label class="check" style="margin-top:24px"><input type="checkbox" id="d3-invert"> <span data-i18n="lbl_invert">היפוך (ליתופן)</span></label></div>
+        </div>
+      </div>
+
+      <div id="d3-panel-vase" class="d3-panel hidden">
+        <div class="row">
+          <div class="field"><label data-i18n="lbl_d3_vheight">גובה (מ"מ)</label><input type="number" id="d3-vase-height" value="100" min="30" max="250"></div>
+          <div class="field"><label data-i18n="lbl_d3_vradius">רדיוס (מ"מ)</label><input type="number" id="d3-vase-radius" value="35" min="10" max="100"></div>
+          <div class="field"><label data-i18n="lbl_d3_waves">גלים</label><input type="number" id="d3-vase-waves" value="6" min="0" max="20"></div>
+        </div>
+      </div>
+
+      <div id="d3-panel-shape" class="d3-panel hidden">
+        <div class="row">
+          <div class="field">
+            <label data-i18n="lbl_d3_shape">צורה</label>
+            <select id="d3-shape">
+              <option value="box" data-i18n="sh_box">קובייה</option>
+              <option value="sphere" data-i18n="sh_sphere">כדור</option>
+              <option value="cylinder" data-i18n="sh_cyl">גליל</option>
+              <option value="torus" data-i18n="sh_torus">טבעת (טורוס)</option>
+            </select>
+          </div>
+          <div class="field"><label data-i18n="lbl_d3_size">גודל (מ"מ)</label><input type="number" id="d3-shape-size" value="50" min="5" max="200"></div>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn primary" id="btn-d3-generate" data-i18n="btn_d3_gen">🧊 צור מודל</button>
+        <button class="btn accent" id="btn-d3-export" disabled data-i18n="btn_d3_export">🖨️ ייצוא STL להדפסה (XMaker)</button>
+      </div>
+      <p class="hint" id="d3-status" data-i18n="d3_hint">קובץ ה-STL נפתח בכל תוכנת הדפסה: XMaker, Bambu Studio, Cura, PrusaSlicer ועוד. קנה מידה: 1 יחידה = 1 מ"מ.</p>
+    </div>
+    <div class="results-col">
+      <div class="viewport-card card"><div id="d3-viewport"></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ABOUT ============ -->
+<section class="tab-panel" id="tab-about">
+  <div class="card about">
+    <h2>Vans AI Studio <span class="ver">v1.0.0</span></h2>
+    <p data-i18n="about_p1">סטודיו יצירה חופשי ופתוח: תמונות, וידאו, מוזיקה, מודלים תלת־ממדיים להדפסה — ומערכת מודלים מותאמים אישית. הכול בלי מפתח API ובלי תשלום.</p>
+    <h3 data-i18n="about_how">איך זה עובד?</h3>
+    <ul class="about-list">
+      <li data-i18n="about_img">🎨 <b>תמונות ווידאו</b> — נוצרים דרך Pollinations.ai, שירות קוד פתוח חינמי שלא דורש מפתח API (מנועי Flux ו-Turbo).</li>
+      <li data-i18n="about_mus">🎵 <b>מוזיקה</b> — מנוע גנרטיבי שכתבנו שרץ כולו במכשיר שלך (Web Audio). עובד גם בלי אינטרנט.</li>
+      <li data-i18n="about_3d">🧊 <b>תלת־ממד</b> — מנוע גיאומטריה מקומי שמייצא STL מוכן להדפסה בכל סלייסר (XMaker ועוד).</li>
+      <li data-i18n="about_models">🧠 <b>מודלים</b> — "מודל" הוא פרופיל סגנון חכם (הנחיות + פרמטרים) שרץ מעל מנועי הבסיס. אפשר ליצור, לייצא, לשתף ולייבא כקבצים.</li>
+    </ul>
+    <h3 data-i18n="about_links">קישורים</h3>
+    <p class="links">
+      <a id="lnk-repo" href="https://github.com/__GHOWNER__/Vans-Ai-Studio" target="_blank">GitHub</a>
+      <a id="lnk-releases" href="https://github.com/__GHOWNER__/Vans-Ai-Studio/releases" target="_blank" data-i18n="lnk_downloads">הורדות (Windows / Mac / Linux / Android)</a>
+      <a href="https://pollinations.ai" target="_blank">Pollinations.ai</a>
+    </p>
+    <div class="btn-row">
+      <button class="btn ghost" id="btn-reset-all" data-i18n="btn_reset">🗑️ איפוס נתונים מקומיים</button>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<div id="toast"></div>
+
+<!-- ============ MODEL CREATE MODAL ============ -->
+<div class="modal-overlay hidden" id="model-modal">
+  <div class="modal card">
+    <h2 data-i18n="mm_title">יצירת מודל חדש</h2>
+    <label data-i18n="mm_name">שם המודל</label>
+    <input type="text" id="mm-name" data-i18n-ph="mm_name_ph" placeholder='לדוגמה: "Vans Dream 2"'>
+    <label data-i18n="mm_desc">תיאור קצר</label>
+    <input type="text" id="mm-desc" data-i18n-ph="mm_desc_ph" placeholder="מה מיוחד במודל הזה?">
+    <div class="row">
+      <div class="field">
+        <label data-i18n="mm_engine">מנוע בסיס</label>
+        <select id="mm-engine"></select>
+      </div>
+    </div>
+    <label data-i18n="mm_prefix">תוספת סגנון לפני הפרומפט (אופציונלי)</label>
+    <input type="text" id="mm-prefix" placeholder="cinematic photo of">
+    <label data-i18n="mm_suffix">תוספת סגנון אחרי הפרומפט</label>
+    <input type="text" id="mm-suffix" placeholder=", oil painting, dramatic light, rich texture">
+    <div id="mm-train" class="hidden">
+      <div class="progress"><div class="bar"></div><span class="ptext"></span></div>
+    </div>
+    <div class="btn-row">
+      <button class="btn primary" id="mm-save" data-i18n="mm_build">🧠 בנה מודל</button>
+      <button class="btn ghost" id="mm-cancel" data-i18n="btn_cancel">ביטול</button>
+    </div>
+    <p class="hint" data-i18n="mm_note">הבנייה יוצרת פרופיל סגנון מעל מנוע פתוח (לא אימון רשת נוירונים מאפס).</p>
+  </div>
+</div>
+
+<script src="vendor/three.min.js"></script>
+<script src="vendor/OrbitControls.js"></script>
+<script src="vendor/STLExporter.js"></script>
+<script src="js/store.js"></script>
+<script src="js/i18n.js"></script>
+<script src="js/engine.js"></script>
+<script src="js/models.js"></script>
+<script src="js/images.js"></script>
+<script src="js/video.js"></script>
+<script src="js/music.js"></script>
+<script src="js/three-d.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,8 @@
+{
+  "appId": "com.vans.aistudio",
+  "appName": "Vans AI Studio",
+  "webDir": "app",
+  "android": {
+    "allowMixedContent": false
+  }
+}

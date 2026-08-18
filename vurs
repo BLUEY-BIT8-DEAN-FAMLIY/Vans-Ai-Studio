@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+# Vans AI Studio launcher - run "./vurs" from the project folder (macOS / Linux).
+cd "$(dirname "$0")" || exit 1
+
+if [ -x "node_modules/.bin/electron" ]; then
+  npm start
+  exit 0
+fi
+
+echo ""
+echo "  Launching Vans AI Studio (web) ..."
+echo "  (For the desktop app run: npm install && npm start)"
+echo ""
+PORT=8765
+( sleep 1
+  if command -v open >/dev/null 2>&1; then open "http://localhost:$PORT"
+  elif command -v xdg-open >/dev/null 2>&1; then xdg-open "http://localhost:$PORT"; fi ) &
+if command -v python3 >/dev/null 2>&1; then ( cd app && python3 -m http.server "$PORT" )
+else echo "Open app/index.html in your browser"; fi
