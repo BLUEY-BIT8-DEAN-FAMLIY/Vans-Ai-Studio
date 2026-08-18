@@ -12,7 +12,11 @@
 </head>
 <body>
 
-<header class="topbar">
+<button class="menu-btn" id="btn-menu" aria-label="Menu">☰</button>
+
+<div class="layout">
+
+<aside class="sidebar" id="sidebar">
   <div class="brand">
     <svg class="logo" viewBox="0 0 48 48" aria-hidden="true">
       <defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1">
@@ -27,6 +31,7 @@
       <p class="tagline" data-i18n="tagline">סטודיו יצירה חופשי — בלי מפתח API</p>
     </div>
   </div>
+
   <nav class="tabs" id="tabs">
     <button class="tab active" data-tab="images"  data-i18n="tab_images">🎨 תמונות</button>
     <button class="tab" data-tab="models"  data-i18n="tab_models">🧠 מודלים</button>
@@ -35,8 +40,14 @@
     <button class="tab" data-tab="three"   data-i18n="tab_three">🧊 תלת־ממד</button>
     <button class="tab" data-tab="about"   data-i18n="tab_about">⚙️ אודות</button>
   </nav>
-  <button class="btn ghost small" id="btn-lang" title="Language">EN</button>
-</header>
+
+  <div class="sidebar-foot">
+    <button class="btn ghost small" id="btn-lang" title="Language">EN</button>
+    <span class="ver-badge">v1.0.0</span>
+  </div>
+</aside>
+
+<div class="scrim" id="scrim"></div>
 
 <main>
 
@@ -348,6 +359,7 @@
 </section>
 
 </main>
+</div><!-- /layout -->
 
 <div id="toast"></div>
 

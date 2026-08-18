@@ -1,9 +1,20 @@
-/* App shell: tabs, language, boot */
+/* App shell: tabs, sidebar drawer, language, boot */
 const App = (() => {
+
+  function closeDrawer() {
+    $('#sidebar').classList.remove('open');
+    $('#scrim').classList.remove('show');
+  }
+  function toggleDrawer() {
+    const open = $('#sidebar').classList.toggle('open');
+    $('#scrim').classList.toggle('show', open);
+  }
 
   function showTab(name) {
     $$('.tab').forEach(b => b.classList.toggle('active', b.dataset.tab === name));
     $$('.tab-panel').forEach(p => p.classList.toggle('active', p.id === 'tab-' + name));
+    closeDrawer();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
     if (name === 'three') {
       ThreeD.initViewport();
       setTimeout(() => ThreeD.onResize(), 50);
@@ -13,6 +24,9 @@ const App = (() => {
   function init() {
     applyI18n();
     $('#btn-lang').onclick = toggleLang;
+    $('#btn-menu').onclick = toggleDrawer;
+    $('#scrim').onclick = closeDrawer;
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDrawer(); });
 
     $$('.tab').forEach(b => b.addEventListener('click', () => showTab(b.dataset.tab)));
 
