@@ -1,5 +1,8 @@
 name: Build & Release
 
+# Runs when a v* tag is pushed, OR when you start it by hand from the
+# Actions tab ("Run workflow") - which is what you use if you published
+# with GitHub Desktop and never pushed a tag.
 on:
   push:
     tags: ['v*']
@@ -76,27 +79,36 @@ jobs:
 
   release:
     needs: [windows, macos, linux, android]
-    if: always() && startsWith(github.ref, 'refs/tags/')
+    if: always()
     runs-on: ubuntu-latest
     steps:
       - uses: actions/download-artifact@v4
         with:
           path: artifacts
           merge-multiple: true
-      - uses: softprops/action-gh-release@v2
+
+      - name: Publish the release
+        uses: softprops/action-gh-release@v2
         with:
+          # a tag push uses that tag; a manual run creates/updates v1.0.0
+          tag_name: ${{ startsWith(github.ref, 'refs/tags/') && github.ref_name || 'v1.0.0' }}
+          name: Vans AI Studio ${{ startsWith(github.ref, 'refs/tags/') && github.ref_name || 'v1.0.0' }}
           files: artifacts/**
-          generate_release_notes: true
+          fail_on_unmatched_files: false
           body: |
             ## Vans AI Studio 🎨
 
-            | קובץ | פלטפורמה |
+            סטודיו יצירה חופשי — תמונות, וידאו, מוזיקה, תלת־ממד ומודלים. בלי מפתח API.
+            Free AI studio — images, video, music, 3D and custom models. No API key needed.
+
+            ### הורדות / Downloads
+
+            | קובץ / File | פלטפורמה / Platform |
             |---|---|
-            | `VansAiStudio-Setup-*.exe` | Windows (התקנה) |
-            | `VansAiStudio-Portable-*.exe` | Windows (נייד, בלי התקנה) |
+            | `VansAiStudio-Setup-*.exe` | Windows — התקנה / installer |
+            | `VansAiStudio-Portable-*.exe` | Windows — נייד / portable |
             | `VansAiStudio-*-mac.dmg` | macOS |
             | `VansAiStudio-*.AppImage` | Linux |
             | `VansAiStudio-Android.apk` | Android |
 
-            **התקנה בפקודה אחת (Windows):** ראו README.
-            Free AI studio - images, video, music, 3D & custom models. No API key needed.
+            אחרי ההתקנה מריצים `vurs` בטרמינל / after installing, just run `vurs`.

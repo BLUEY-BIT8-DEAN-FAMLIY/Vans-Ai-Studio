@@ -1,8 +1,8 @@
 # Vans AI Studio - one-line installer for Windows
-# Usage:  irm https://raw.githubusercontent.com/__GHOWNER__/Vans-Ai-Studio/main/installers/install.ps1 | iex
+# Usage:  irm https://raw.githubusercontent.com/deanavraham-bit/Vans-Ai-Studio/main/installers/install.ps1 | iex
 # Afterwards just run:  vurs
 $ErrorActionPreference = 'Stop'
-$Owner = '__GHOWNER__'
+$Owner = 'deanavraham-bit'
 $Repo  = 'Vans-Ai-Studio'
 
 $Dir = Join-Path $env:LOCALAPPDATA 'VansAiStudio'
