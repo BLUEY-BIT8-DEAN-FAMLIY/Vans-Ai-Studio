@@ -1,0 +1,12 @@
+# Keep shell scripts LF so `curl | bash` and Linux/macOS execution never see \r
+*.sh    text eol=lf
+vurs    text eol=lf
+start-web.sh text eol=lf
+
+# Windows scripts stay CRLF
+*.bat   text eol=crlf
+*.ps1   text eol=crlf
+
+# Binaries / vendored libs untouched
+*.png   binary
+*.min.js -text
