@@ -37,12 +37,17 @@ const Engine = (() => {
   }
 
   function methodsFor(url) {
-    const m = [];
-    if (localProxy) m.push(localProxy + encodeURIComponent(url));
-    m.push(url); // Electron (Origin stripped) or any context without the bot-check
-    m.push('https://corsproxy.io/?url=' + encodeURIComponent(url));
-    m.push('https://api.allorigins.win/raw?url=' + encodeURIComponent(url));
-    return m;
+    // Local server: only the same-origin proxy works in-browser (it retries
+    // server-side); direct/public routes are always bot-blocked, so skip them.
+    if (localProxy) return [localProxy + encodeURIComponent(url)];
+    // Electron strips Origin, so a direct request succeeds.
+    if (isElectron) return [url];
+    // Static web host: try direct, then public CORS proxies as a best effort.
+    return [
+      url,
+      'https://corsproxy.io/?url=' + encodeURIComponent(url),
+      'https://api.allorigins.win/raw?url=' + encodeURIComponent(url)
+    ];
   }
 
   function looksBlocked(txt) {
