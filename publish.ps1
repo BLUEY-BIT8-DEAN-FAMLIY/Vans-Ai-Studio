@@ -15,6 +15,9 @@ if ($LASTEXITCODE -ne 0) {
   exit 1
 }
 
+# 0b) route git auth through gh, since the OS credential manager may hold a stale token
+gh auth setup-git 2>&1 | Out-Null
+
 # 1) real owner name
 $Owner = gh api user -q .login
 if (-not $Owner) { throw 'could not resolve GitHub user' }
