@@ -16,13 +16,13 @@
 **Windows** (PowerShell):
 
 ```powershell
-irm https://raw.githubusercontent.com/deanavraham-bit/Vans-Ai-Studio/main/installers/install.ps1 | iex
+irm https://raw.githubusercontent.com/BLUEY-BIT8-DEAN-FAMLIY/Vans-Ai-Studio/main/installers/install.ps1 | iex
 ```
 
 **macOS / Linux:**
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/deanavraham-bit/Vans-Ai-Studio/main/installers/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/BLUEY-BIT8-DEAN-FAMLIY/Vans-Ai-Studio/main/installers/install.sh | bash
 ```
 
 ואז פשוט מריצים / then just run:
@@ -35,7 +35,7 @@ vurs
 
 ## 📦 הורדות / Downloads
 
-כל הקבצים בעמוד ה-[Releases](https://github.com/deanavraham-bit/Vans-Ai-Studio/releases):
+כל הקבצים בעמוד ה-[Releases](https://github.com/BLUEY-BIT8-DEAN-FAMLIY/Vans-Ai-Studio/releases):
 
 | קובץ / File | פלטפורמה / Platform |
 |---|---|
@@ -45,7 +45,7 @@ vurs
 | `VansAiStudio-*.AppImage` | Linux |
 | `VansAiStudio-Android.apk` | Android |
 
-🌐 **גרסת Web (בלי התקנה):** https://deanavraham-bit.github.io/Vans-Ai-Studio/
+🌐 **גרסת Web (בלי התקנה):** https://bluey-bit8-dean-famliy.github.io/Vans-Ai-Studio/
 
 💡 הורדתם את הקוד? הריצו `vurs` מתוך תיקיית הפרויקט (או לחיצה כפולה על `vurs.bat` ב-Windows / `./vurs` ב-Mac/Linux) כדי לפתוח את האפליקציה מיד בדפדפן — בלי שום התקנה.
 
@@ -61,7 +61,7 @@ vurs
 ## 🖥️ הרצה מקומית / Run from source
 
 ```bash
-git clone https://github.com/deanavraham-bit/Vans-Ai-Studio.git
+git clone https://github.com/BLUEY-BIT8-DEAN-FAMLIY/Vans-Ai-Studio.git
 ```
 
 ```bash

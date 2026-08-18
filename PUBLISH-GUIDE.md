@@ -1,7 +1,7 @@
 # העלאה לגיטהאב עם GitHub Desktop
 
 הפרויקט כבר מוכן לחלוטין (git מאותחל, כל הקומיטים בוצעו, כל הקישורים מעודכנים
-ל-`deanavraham-bit`). נשארו 3 שלבים.
+ל-`BLUEY-BIT8-DEAN-FAMLIY`). נשארו 3 שלבים.
 
 ---
 
@@ -39,7 +39,7 @@
 5. `Publish repository`. זה מעלה את כל הפרויקט. ✅
 
 **כבר בשלב הזה גרסת ה-Web מתחילה לעלות אוטומטית** ל:
-`https://deanavraham-bit.github.io/Vans-Ai-Studio/`
+`https://bluey-bit8-dean-famliy.github.io/Vans-Ai-Studio/`
 (לוקח 2–3 דקות בפעם הראשונה)
 
 ---
@@ -48,13 +48,13 @@
 
 GitHub Desktop לא שולח תגיות (tags), ולכן צריך להתחיל את הבנייה בלחיצה אחת:
 
-1. פתח: **https://github.com/deanavraham-bit/Vans-Ai-Studio/actions**
+1. פתח: **https://github.com/BLUEY-BIT8-DEAN-FAMLIY/Vans-Ai-Studio/actions**
 2. בתפריט בצד שמאל בחר **`Build & Release`**
 3. לחץ **`Run workflow`** → ואז שוב **`Run workflow`** (הכפתור הירוק)
 4. חכה 10–20 דקות (הוא בונה במקביל על Windows, macOS, Linux ואנדרואיד)
 
 בסיום כל הקבצים יופיעו כאן:
-**https://github.com/deanavraham-bit/Vans-Ai-Studio/releases**
+**https://github.com/BLUEY-BIT8-DEAN-FAMLIY/Vans-Ai-Studio/releases**
 
 | קובץ | פלטפורמה |
 |---|---|
@@ -71,7 +71,7 @@ GitHub Desktop לא שולח תגיות (tags), ולכן צריך להתחיל �
 **מי שרוצה להתקין** מריץ בטרמינל:
 
 ```powershell
-irm https://raw.githubusercontent.com/deanavraham-bit/Vans-Ai-Studio/main/installers/install.ps1 | iex
+irm https://raw.githubusercontent.com/BLUEY-BIT8-DEAN-FAMLIY/Vans-Ai-Studio/main/installers/install.ps1 | iex
 ```
 
 ואז פשוט:
@@ -89,4 +89,4 @@ vurs
 | הבנייה של אנדרואיד נכשלה | לא מפריע — שאר הקבצים עדיין מתפרסמים (הגדרתי `fail_on_unmatched_files: false`) |
 | אין טאב Actions | הריפו כנראה פרטי — `Settings` → למטה → `Change visibility` → Public |
 | גרסת ה-Web לא עולה | `Settings` → `Pages` → תחת Source בחר **GitHub Actions** |
-| רוצה לשנות שם חשבון בקישורים | הקישורים מקובעים ל-`deanavraham-bit`; אם פרסמת בחשבון אחר, תגיד לי ואעדכן |
+| רוצה לשנות שם חשבון בקישורים | הקישורים מקובעים ל-`BLUEY-BIT8-DEAN-FAMLIY`; אם פרסמת בחשבון אחר, תגיד לי ואעדכן |

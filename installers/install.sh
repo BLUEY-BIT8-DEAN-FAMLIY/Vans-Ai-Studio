@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 # Vans AI Studio - one-line installer for macOS / Linux
-# Usage:  curl -fsSL https://raw.githubusercontent.com/deanavraham-bit/Vans-Ai-Studio/main/installers/install.sh | bash
+# Usage:  curl -fsSL https://raw.githubusercontent.com/BLUEY-BIT8-DEAN-FAMLIY/Vans-Ai-Studio/main/installers/install.sh | bash
 # Afterwards just run:  vurs
 set -e
-OWNER="deanavraham-bit"
+OWNER="BLUEY-BIT8-DEAN-FAMLIY"
 REPO="Vans-Ai-Studio"
 DIR="$HOME/.vans-ai-studio"
 BIN="$HOME/.local/bin"
