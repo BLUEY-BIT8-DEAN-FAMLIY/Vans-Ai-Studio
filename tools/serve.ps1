@@ -56,8 +56,10 @@ $handler = {
         if ($uri.Scheme -eq 'https' -and $uri.Host.ToLower().EndsWith('pollinations.ai')) {
           # Pollinations allows one queued request per IP; on 429 wait for it to
           # clear, then retry. Backoff is tuned to their ~1-2s queue turnover.
-          for ($attempt = 0; $attempt -lt 6 -and -not $valid; $attempt++) {
-            if ($attempt -gt 0) { Start-Sleep -Milliseconds (900 + 700 * $attempt) }
+          # ~40s of patience in total: a busy queue clears in seconds, and a
+          # text generation can legitimately occupy it for a while.
+          for ($attempt = 0; $attempt -lt 9 -and -not $valid; $attempt++) {
+            if ($attempt -gt 0) { Start-Sleep -Milliseconds (1000 + 900 * $attempt) }
             try {
               $wr = [System.Net.HttpWebRequest]::Create($uri)
               $wr.UserAgent = 'VansAiStudio/1.0'
@@ -68,7 +70,9 @@ $handler = {
               $resp.GetResponseStream().CopyTo($ms)
               $bytes = $ms.ToArray()
               $resp.Close()
-              if ($bytes.Length -gt 200) { $valid = $true }
+              # any 200 response with a body is good: images are large, but text
+              # answers (and the tiny /models list) are legitimately short
+              if ($bytes.Length -gt 0) { $valid = $true }
             } catch {
               $er = $_.Exception.Response
               if ($er) { try { $er.Close() } catch { } }   # release the connection before retry

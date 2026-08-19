@@ -28,6 +28,8 @@ Everything the user creates is generated either by a **free public service** or 
 | Music | Custom generative engine (Web Audio) | 100% local | **No** |
 | 3D | Custom geometry engine (Three.js + STL export) | 100% local | Only for AI reliefs |
 | Models | Style profiles stored in `localStorage` | 100% local | No |
+| Documents | Pollinations text + local .docx writer | Text from cloud, file built locally | Yes (for the writing) |
+| Presentations | Pollinations text/images + local .pptx writer | Text from cloud, file built locally | Yes (for the writing) |
 
 ---
 
@@ -150,6 +152,50 @@ Height-map modes go through one shared routine that generates a **closed solid**
 
 ---
 
+## 7b. The Work edition — documents and presentations
+
+A switch at the top of the sidebar flips the app between two editions:
+
+- **Create** — images, models, video, music, 3D
+- **Work** — documents and presentations (images stay available for illustrations)
+
+The choice is remembered in `localStorage`; tabs that do not belong to the active
+edition are simply hidden.
+
+### Documents ([`app/js/docs.js`](app/js/docs.js))
+
+Pick a type (article, report, formal letter, email, summary, work plan, resume,
+meeting minutes), a language and a length. The prompt asks the free text model for
+a restricted markdown subset — `#` title, `##` headings, `-` bullets, plain lines
+for paragraphs — which is parsed into a list of typed blocks. Every block is
+rendered `contenteditable`, so edits in the preview write straight back into the
+model that gets exported.
+
+### Presentations ([`app/js/slides.js`](app/js/slides.js))
+
+The model returns a slide outline (`## title` + `-` bullets per slide) which is
+parsed into a deck. Optionally each slide also gets an AI illustration, fetched as
+real bytes so it can be embedded in the export. Slides are editable in place, and
+a present mode runs them full screen with arrow-key navigation.
+
+### Real Office files, written from scratch
+
+`.docx` and `.pptx` are OOXML: a ZIP of XML parts. There is no library here, so
+the app writes both itself:
+
+- [`app/js/zip.js`](app/js/zip.js) — a small ZIP writer (store method, CRC32). Word
+  and PowerPoint accept uncompressed archives, so no deflate implementation is needed.
+- [`app/js/office.js`](app/js/office.js) — emits the parts each format requires:
+  `document.xml` + styles + numbering for Word; presentation, slide master, layout,
+  theme, and one part per slide for PowerPoint, plus embedded JPEGs in `ppt/media/`.
+
+Hebrew is handled explicitly: paragraphs carry `<w:bidi/>` and runs carry
+`<w:rtl/>` in Word, and slide paragraphs get `rtl="1"` with right alignment — with
+the image moved to the other side so the layout mirrors properly.
+
+PDF export reuses the browser: a styled print stylesheet plus the print dialog's
+"Save as PDF". HTML and TXT exports are self-contained files.
+
 ## 8. The interface
 
 - **Side menu** — navigation lives in a sidebar on the leading edge: **right in Hebrew (RTL), left in English (LTR)**. It flips automatically with the language.
@@ -173,6 +219,10 @@ Vans Ai Studio/
 │   │   ├── video.js        # scene generation + canvas recording
 │   │   ├── music.js        # generative music + WAV encoder
 │   │   ├── three-d.js      # geometry engine + STL export
+│   │   ├── zip.js          # ZIP writer (Office files are ZIPs of XML)
+│   │   ├── office.js       # .docx and .pptx generators, RTL-aware
+│   │   ├── docs.js         # Documents tool
+│   │   ├── slides.js       # Presentations tool
 │   │   ├── i18n.js         # Hebrew / English strings
 │   │   ├── store.js        # localStorage, helpers, seeded RNG
 │   │   └── app.js          # tabs, drawer, boot

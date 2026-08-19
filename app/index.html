@@ -32,13 +32,20 @@
     </div>
   </div>
 
+  <div class="mode-switch" id="mode-switch">
+    <button class="mode-btn active" data-mode="create" data-i18n="mode_create">יצירה</button>
+    <button class="mode-btn" data-mode="work" data-i18n="mode_work">עבודה</button>
+  </div>
+
   <nav class="tabs" id="tabs">
-    <button class="tab active" data-tab="images"  data-i18n="tab_images">🎨 תמונות</button>
-    <button class="tab" data-tab="models"  data-i18n="tab_models">🧠 מודלים</button>
-    <button class="tab" data-tab="video"   data-i18n="tab_video">🎬 וידאו</button>
-    <button class="tab" data-tab="music"   data-i18n="tab_music">🎵 מוזיקה</button>
-    <button class="tab" data-tab="three"   data-i18n="tab_three">🧊 תלת־ממד</button>
-    <button class="tab" data-tab="about"   data-i18n="tab_about">⚙️ אודות</button>
+    <button class="tab active" data-tab="images" data-mode="both"   data-i18n="tab_images">🎨 תמונות</button>
+    <button class="tab" data-tab="models" data-mode="create" data-i18n="tab_models">🧠 מודלים</button>
+    <button class="tab" data-tab="video"  data-mode="create" data-i18n="tab_video">🎬 וידאו</button>
+    <button class="tab" data-tab="music"  data-mode="create" data-i18n="tab_music">🎵 מוזיקה</button>
+    <button class="tab" data-tab="three"  data-mode="create" data-i18n="tab_three">🧊 תלת־ממד</button>
+    <button class="tab" data-tab="docs"   data-mode="work"   data-i18n="tab_docs">📄 מסמכים</button>
+    <button class="tab" data-tab="slides" data-mode="work"   data-i18n="tab_slides">📊 מצגות</button>
+    <button class="tab" data-tab="about"  data-mode="both"   data-i18n="tab_about">⚙️ אודות</button>
   </nav>
 
   <div class="sidebar-foot">
@@ -334,6 +341,113 @@
   </div>
 </section>
 
+<!-- ============ DOCUMENTS ============ -->
+<section class="tab-panel" id="tab-docs">
+  <div class="split">
+    <div class="card form-card">
+      <h2 data-i18n="doc_title">יצירת מסמך</h2>
+      <label data-i18n="doc_topic_lbl">על מה המסמך?</label>
+      <textarea id="doc-topic" rows="3" data-i18n-ph="doc_topic_ph" placeholder="לדוגמה: דוח סיכום רבעוני למחלקת השיווק"></textarea>
+      <div class="row">
+        <div class="field">
+          <label data-i18n="doc_kind_lbl">סוג מסמך</label>
+          <select id="doc-kind">
+            <option value="article" data-i18n="dk_article">מאמר</option>
+            <option value="report" data-i18n="dk_report">דוח</option>
+            <option value="letter" data-i18n="dk_letter">מכתב רשמי</option>
+            <option value="email" data-i18n="dk_email">אימייל</option>
+            <option value="summary" data-i18n="dk_summary">סיכום</option>
+            <option value="plan" data-i18n="dk_plan">תוכנית עבודה</option>
+            <option value="cv" data-i18n="dk_cv">קורות חיים</option>
+            <option value="protocol" data-i18n="dk_protocol">פרוטוקול ישיבה</option>
+          </select>
+        </div>
+        <div class="field">
+          <label data-i18n="doc_lang_lbl">שפה</label>
+          <select id="doc-lang">
+            <option value="he">עברית</option>
+            <option value="en">English</option>
+            <option value="auto" data-i18n="lang_auto">אוטומטי</option>
+          </select>
+        </div>
+      </div>
+      <div class="field">
+        <label data-i18n="doc_len_lbl">אורך</label>
+        <select id="doc-len">
+          <option value="short" data-i18n="len_short">קצר</option>
+          <option value="medium" selected data-i18n="len_medium">בינוני</option>
+          <option value="long" data-i18n="len_long">ארוך</option>
+        </select>
+      </div>
+      <div class="btn-row">
+        <button class="btn primary" id="btn-doc-generate" data-i18n="btn_doc_generate">✍️ כתוב מסמך</button>
+        <button class="btn ghost small" id="btn-doc-clear" data-i18n="btn_clear_doc">נקה</button>
+      </div>
+      <div class="progress hidden" id="doc-progress"><div class="bar"></div><span class="ptext"></span></div>
+      <p class="hint" data-i18n="doc_hint">המסמך נכתב ע"י AI חינמי ללא מפתח API. אפשר לערוך כל שורה ישירות בתצוגה, ואז לייצא ל-Word אמיתי.</p>
+    </div>
+
+    <div class="results-col">
+      <div class="btn-row hidden" id="doc-export-row">
+        <button class="btn accent" id="btn-doc-docx" data-i18n="btn_docx">📄 ייצוא Word (.docx)</button>
+        <button class="btn ghost" id="btn-doc-pdf" data-i18n="btn_pdf">🖨️ PDF</button>
+        <button class="btn ghost" id="btn-doc-html" data-i18n="btn_html">HTML</button>
+        <button class="btn ghost" id="btn-doc-txt" data-i18n="btn_txt">TXT</button>
+      </div>
+      <div class="paper" id="doc-page"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PRESENTATIONS ============ -->
+<section class="tab-panel" id="tab-slides">
+  <div class="split">
+    <div class="card form-card">
+      <h2 data-i18n="slide_title">יצירת מצגת</h2>
+      <label data-i18n="slide_topic_lbl">נושא המצגת</label>
+      <textarea id="slide-topic" rows="3" data-i18n-ph="slide_topic_ph" placeholder="לדוגמה: הצגת מוצר חדש למשקיעים"></textarea>
+      <div class="row">
+        <div class="field">
+          <label data-i18n="slide_count_lbl">מספר שקופיות</label>
+          <select id="slide-count">
+            <option value="4">4</option>
+            <option value="6" selected>6</option>
+            <option value="8">8</option>
+            <option value="10">10</option>
+          </select>
+        </div>
+        <div class="field">
+          <label data-i18n="doc_lang_lbl">שפה</label>
+          <select id="slide-lang">
+            <option value="he">עברית</option>
+            <option value="en">English</option>
+            <option value="auto" data-i18n="lang_auto">אוטומטי</option>
+          </select>
+        </div>
+      </div>
+      <label class="check"><input type="checkbox" id="slide-images"> <span data-i18n="slide_images_lbl">צור גם איורי AI לכל שקופית (איטי יותר)</span></label>
+      <div class="btn-row">
+        <button class="btn primary" id="btn-slide-generate" data-i18n="btn_slide_generate">📊 בנה מצגת</button>
+        <button class="btn ghost small" id="btn-slide-add" data-i18n="btn_slide_add">➕ שקופית</button>
+        <button class="btn ghost small" id="btn-slide-clear" data-i18n="btn_clear_doc">נקה</button>
+      </div>
+      <div class="progress hidden" id="slide-progress"><div class="bar"></div><span class="ptext"></span></div>
+      <p class="hint" data-i18n="slide_hint">כל שקופית ניתנת לעריכה ישירה. הייצוא הוא קובץ PowerPoint אמיתי שנפתח ב-Office, Google Slides ו-LibreOffice.</p>
+    </div>
+
+    <div class="results-col">
+      <div class="btn-row hidden" id="slide-export-row">
+        <button class="btn accent" id="btn-slide-pptx" data-i18n="btn_pptx">📊 ייצוא PowerPoint (.pptx)</button>
+        <button class="btn ghost" id="btn-slide-present" data-i18n="btn_present">▶️ הצג</button>
+        <button class="btn ghost" id="btn-slide-pdf" data-i18n="btn_pdf">🖨️ PDF</button>
+        <button class="btn ghost" id="btn-slide-html" data-i18n="btn_html">HTML</button>
+        <span class="hint" style="margin:0"><span id="slide-count-label">0</span> <span data-i18n="slides_word">שקופיות</span></span>
+      </div>
+      <div id="deck"></div>
+    </div>
+  </div>
+</section>
+
 <!-- ============ ABOUT ============ -->
 <section class="tab-panel" id="tab-about">
   <div class="card about">
@@ -362,6 +476,17 @@
 </div><!-- /layout -->
 
 <div id="toast"></div>
+
+<!-- ============ PRESENT MODE ============ -->
+<div class="present-overlay hidden" id="present-overlay">
+  <div class="present-stage" id="present-stage"></div>
+  <div class="present-bar">
+    <button class="btn ghost small" id="present-prev">◀</button>
+    <span id="present-pos">1 / 1</span>
+    <button class="btn ghost small" id="present-next">▶</button>
+    <button class="btn ghost small" id="present-close">✕</button>
+  </div>
+</div>
 
 <!-- ============ MODEL CREATE MODAL ============ -->
 <div class="modal-overlay hidden" id="model-modal">
@@ -396,12 +521,16 @@
 <script src="vendor/OrbitControls.js"></script>
 <script src="vendor/STLExporter.js"></script>
 <script src="js/store.js"></script>
+<script src="js/zip.js"></script>
 <script src="js/i18n.js"></script>
 <script src="js/engine.js"></script>
 <script src="js/models.js"></script>
 <script src="js/images.js"></script>
 <script src="js/video.js"></script>
 <script src="js/music.js"></script>
+<script src="js/office.js"></script>
+<script src="js/docs.js"></script>
+<script src="js/slides.js"></script>
 <script src="js/three-d.js"></script>
 <script src="js/app.js"></script>
 </body>

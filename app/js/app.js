@@ -1,5 +1,7 @@
-/* App shell: tabs, sidebar drawer, language, boot */
+/* App shell: edition (Create / Work), tabs, sidebar drawer, language, boot */
 const App = (() => {
+
+  let MODE = Store.get('mode', 'create');   // 'create' | 'work'
 
   function closeDrawer() {
     $('#sidebar').classList.remove('open');
@@ -21,6 +23,27 @@ const App = (() => {
     }
   }
 
+  /* Show only the tabs belonging to the current edition. */
+  function applyMode(mode) {
+    MODE = mode;
+    Store.set('mode', mode);
+    $$('.mode-btn').forEach(b => b.classList.toggle('active', b.dataset.mode === mode));
+
+    let visible = [];
+    $$('.tab').forEach(b => {
+      const m = b.dataset.mode;
+      const show = (m === 'both' || m === mode);
+      b.classList.toggle('hidden-mode', !show);
+      if (show) visible.push(b);
+    });
+
+    // if the open tab no longer belongs to this edition, move to the first one
+    const active = $('.tab.active');
+    if (!active || active.classList.contains('hidden-mode')) {
+      if (visible.length) showTab(visible[0].dataset.tab);
+    }
+  }
+
   function init() {
     applyI18n();
     $('#btn-lang').onclick = toggleLang;
@@ -29,12 +52,17 @@ const App = (() => {
     document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDrawer(); });
 
     $$('.tab').forEach(b => b.addEventListener('click', () => showTab(b.dataset.tab)));
+    $$('.mode-btn').forEach(b => b.addEventListener('click', () => applyMode(b.dataset.mode)));
 
     Models.init();
     Images.init();
     Video.init();
     Music.init();
+    Docs.init();
+    Slides.init();
     ThreeD.init();
+
+    applyMode(MODE);
 
     $('#btn-reset-all').onclick = () => {
       if (confirm(t('t_reset_confirm'))) {
@@ -58,6 +86,6 @@ const App = (() => {
   }
 
   document.addEventListener('DOMContentLoaded', init);
-  return { showTab };
+  return { showTab, applyMode };
 })();
 window.App = App;

@@ -136,6 +136,16 @@ const Engine = (() => {
       .then(out => out.trim().replace(/^["']+|["']+$/g, '').slice(0, 800));
   }
 
+
+  // Free text generation (used by the Documents and Presentations tools).
+  function generateText(prompt, opts) {
+    const o = opts || {};
+    const q = new URLSearchParams();
+    if (o.json) q.set('json', 'true');
+    q.set('referrer', 'vans-ai-studio');
+    const url = TXT_BASE + '/' + encodeURIComponent(prompt) + '?' + q.toString();
+    return enqueue(() => _text(url)).then(s => s.trim());
+  }
   // DISPLAY: resolve a usable src. Where we can fetch bytes (local proxy / Electron)
   // use the reliable proxy; on a plain static host fall back to a no-Origin <img>.
   function resolveDisplaySrc(url) {
@@ -188,7 +198,7 @@ const Engine = (() => {
   }
 
   return {
-    buildImageUrl, fetchEngines, enhancePrompt,
+    buildImageUrl, fetchEngines, enhancePrompt, generateText,
     resolveDisplaySrc, loadPixelImage, fetchBlob, download, mountImage,
     get engines() { return engineList; }
   };
