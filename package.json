@@ -1,7 +1,7 @@
 {
   "name": "vans-ai-studio",
-  "version": "1.0.0",
-  "description": "Free AI studio - images, video, music, 3D models & custom style models. No API key needed.",
+  "version": "1.1.0",
+  "description": "Free AI studio - images, video, music, 3D models, custom style models, documents and presentations. No API key needed.",
   "main": "electron/main.js",
   "author": "Vans AI Studio",
   "license": "MIT",
@@ -37,7 +37,10 @@
       "package.json"
     ],
     "win": {
-      "target": ["nsis", "portable"],
+      "target": [
+        "nsis",
+        "portable"
+      ],
       "icon": "build/icon.png",
       "artifactName": "VansAiStudio-Setup-${version}.exe"
     },
@@ -50,14 +53,18 @@
       "deleteAppDataOnUninstall": false
     },
     "mac": {
-      "target": ["dmg"],
+      "target": [
+        "dmg"
+      ],
       "icon": "build/icon.png",
       "identity": null,
       "category": "public.app-category.graphics-design",
       "artifactName": "VansAiStudio-${version}-mac.dmg"
     },
     "linux": {
-      "target": ["AppImage"],
+      "target": [
+        "AppImage"
+      ],
       "icon": "build/icon.png",
       "category": "Graphics",
       "artifactName": "VansAiStudio-${version}.AppImage"
