@@ -69,11 +69,11 @@ const Engine = (() => {
     throw lastErr || new Error('image fetch failed');
   }
 
-  async function _text(url) {
+  async function _text(url, timeoutMs) {
     let lastErr;
     for (const m of methodsFor(url)) {
       try {
-        const r = await fetch(m, { signal: AbortSignal.timeout(45000) });
+        const r = await fetch(m, { signal: AbortSignal.timeout(timeoutMs || 45000) });
         if (!r.ok) { lastErr = new Error('HTTP ' + r.status); continue; }
         const txt = await r.text();
         if (!looksBlocked(txt)) return txt;
@@ -144,7 +144,9 @@ const Engine = (() => {
     if (o.json) q.set('json', 'true');
     q.set('referrer', 'vans-ai-studio');
     const url = TXT_BASE + '/' + encodeURIComponent(prompt) + '?' + q.toString();
-    return enqueue(() => _text(url)).then(s => s.trim());
+    // short timeout: the Work tools fall back to the local builder, so a slow or
+    // unavailable writer must not keep the user waiting
+    return enqueue(() => _text(url, o.timeoutMs || 18000)).then(s => s.trim());
   }
   // DISPLAY: resolve a usable src. Where we can fetch bytes (local proxy / Electron)
   // use the reliable proxy; on a plain static host fall back to a no-Origin <img>.

@@ -100,7 +100,11 @@ const I18N = {
     slide_ready: 'המצגת מוכנה! 📊', slide_fail: 'בניית המצגת נכשלה — נסו שוב',
     slide_exported_pptx: 'קובץ PowerPoint ירד ✓',
     slide_new_title: 'כותרת חדשה', slide_new_bullet: 'נקודה ראשונה',
-    t_need_topic: 'צריך לכתוב קודם נושא 🙂'
+    t_need_topic: 'צריך לכתוב קודם נושא 🙂',
+    doc_offline: 'נוצרה טיוטה מובנית במכשיר (שירות הכתיבה המקוון אינו זמין כרגע) — ערכו וייצאו 📄',
+    doc_trying: 'הטיוטה מוכנה — בודק אם אפשר לשפר אותה מקוון...',
+    slide_trying: 'המצגת מוכנה — בודק אם אפשר לשפר אותה מקוון...',
+    slide_offline: 'נוצרה מצגת מובנית במכשיר (שירות הכתיבה המקוון אינו זמין כרגע) — ערכו וייצאו 📊'
   },
   en: {
     tagline: 'Free creative studio — no API key',
@@ -201,7 +205,11 @@ const I18N = {
     slide_ready: 'Presentation ready! 📊', slide_fail: 'Building failed - try again',
     slide_exported_pptx: 'PowerPoint file downloaded ✓',
     slide_new_title: 'New title', slide_new_bullet: 'First point',
-    t_need_topic: 'Enter a topic first 🙂'
+    t_need_topic: 'Enter a topic first 🙂',
+    doc_offline: 'Built a structured draft on your device (the online writer is unavailable) - edit and export 📄',
+    doc_trying: 'Draft ready - checking whether the online writer can improve it...',
+    slide_trying: 'Deck ready - checking whether the online writer can improve it...',
+    slide_offline: 'Built a structured deck on your device (the online writer is unavailable) - edit and export 📊'
   }
 };
 

@@ -2,6 +2,7 @@
    Text generation goes through the same free, keyless backend as everything else. */
 const Docs = (() => {
   let blocks = [];   // [{ type, text }]
+  let edited = false;   // set once the user types, so a late AI result never clobbers their work
 
   const KINDS = {
     article:  { he: 'מאמר',            en: 'Article',        instr: 'a well-structured article' },
@@ -61,7 +62,7 @@ const Docs = (() => {
       el.contentEditable = 'true';
       el.spellcheck = false;
       el.dataset.i = i;
-      el.addEventListener('input', () => { blocks[i].text = el.textContent; });
+      el.addEventListener('input', () => { blocks[i].text = el.textContent; edited = true; });
       (wantList ? list : page).appendChild(el);
     });
     $('#doc-export-row').classList.remove('hidden');
@@ -91,17 +92,25 @@ const Docs = (() => {
       'plain lines for paragraphs.\n' +
       'Do not use bold, italics, code blocks, tables or any other markup. Do not add any commentary before or after the document.';
 
+    // 1) a structured draft appears immediately, built on this device
+    blocks = Templates.document(kind, topic, lang, len);
+    edited = false;
+    render();
+    setProgress(prog, 55, t('doc_trying'));
+
+    // 2) if the online writer is reachable, upgrade the draft in place
     try {
       const raw = await Engine.generateText(prompt);
-      setProgress(prog, 90, t('doc_writing'));
-      blocks = parse(raw);
-      render();
-      hideProgress(prog);
-      toast(t('doc_ready'));
+      const parsed = parse(raw);
+      if (parsed.length >= 3 && !edited) {
+        blocks = parsed;
+        render();
+        toast(t('doc_ready'));
+      }
     } catch (e) {
-      hideProgress(prog);
-      toast(t('doc_fail'));
+      toast(t('doc_offline'), 6000);
     }
+    hideProgress(prog);
     btn.disabled = false;
   }
 

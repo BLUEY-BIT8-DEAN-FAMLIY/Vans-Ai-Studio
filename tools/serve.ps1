@@ -58,7 +58,10 @@ $handler = {
           # clear, then retry. Backoff is tuned to their ~1-2s queue turnover.
           # ~40s of patience in total: a busy queue clears in seconds, and a
           # text generation can legitimately occupy it for a while.
-          for ($attempt = 0; $attempt -lt 9 -and -not $valid; $attempt++) {
+          # images are worth waiting for; the text endpoint is credit-gated,
+          # so failing fast there lets the app switch to its local builder
+          $maxAttempts = if ($uri.Host.ToLower().StartsWith('text.')) { 2 } else { 9 }
+          for ($attempt = 0; $attempt -lt $maxAttempts -and -not $valid; $attempt++) {
             if ($attempt -gt 0) { Start-Sleep -Milliseconds (1000 + 900 * $attempt) }
             try {
               $wr = [System.Net.HttpWebRequest]::Create($uri)

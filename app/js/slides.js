@@ -3,6 +3,7 @@
 const Slides = (() => {
   let deck = [];        // [{ title, bullets: [], imageUrl?, imageBytes? }]
   let current = 0;
+  let edited = false;   // guards a late AI result from overwriting user edits
 
   /* ---------- parse the model output into slides ---------- */
   function parse(raw) {
@@ -58,6 +59,7 @@ const Slides = (() => {
         const i = +el.dataset.i;
         if (el.dataset.f === 'title') deck[i].title = el.textContent;
         else deck[i].bullets[+el.dataset.b] = el.textContent;
+        edited = true;
       });
     });
     $('#slide-export-row').classList.remove('hidden');
@@ -83,12 +85,22 @@ const Slides = (() => {
       '## Slide title\n- bullet one\n- bullet two\n- bullet three\n' +
       'Use 2 to 4 short bullets per slide (max 12 words each). No commentary before or after.';
 
+    // 1) a structured deck appears immediately, built on this device
+    deck = Templates.deck(topic, count, lang);
+    edited = false;
+    render();
+    setProgress(prog, 20, t('slide_trying'));
+
+    // 2) upgrade it with the online writer when that is reachable
     try {
-      setProgress(prog, 15, t('slide_outlining'));
       const raw = await Engine.generateText(prompt);
-      deck = parse(raw).slice(0, count);
-      if (!deck.length) throw new Error('empty outline');
-      render();
+      const parsed = parse(raw).slice(0, count);
+      if (parsed.length >= 2 && !edited) { deck = parsed; render(); toast(t('slide_ready')); }
+    } catch (e) {
+      toast(t('slide_offline'), 5000);
+    }
+
+    try {
 
       if (withImages) {
         for (let i = 0; i < deck.length; i++) {
@@ -106,7 +118,6 @@ const Slides = (() => {
         }
       }
       hideProgress(prog);
-      toast(t('slide_ready'));
     } catch (e) {
       hideProgress(prog);
       toast(t('slide_fail'));
@@ -210,5 +221,5 @@ ul{font-size:1.5vw;line-height:1.9;color:#d7daf0;padding-inline-start:22px}
     render();
   }
 
-  return { init };
+  return { init, get deck() { return deck; } };
 })();
