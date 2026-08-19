@@ -1,7 +1,13 @@
 /* App shell: edition (Create / Work), tabs, sidebar drawer, language, boot */
 const App = (() => {
 
-  let MODE = Store.get('mode', 'create');   // 'create' | 'work'
+  // A #work / #create hash wins over the stored choice, so a bookmarked link
+  // (like the family work entry) always opens the right edition.
+  function modeFromHash() {
+    const h = (location.hash || '').replace('#', '').toLowerCase();
+    return (h === 'work' || h === 'create') ? h : null;
+  }
+  let MODE = modeFromHash() || Store.get('mode', 'create');   // 'create' | 'work'
 
   function closeDrawer() {
     $('#sidebar').classList.remove('open');
@@ -63,6 +69,19 @@ const App = (() => {
     ThreeD.init();
 
     applyMode(MODE);
+
+    // a one-shot tab request from the family work entry page
+    const entry = Store.get('entryTab', null);
+    if (entry) {
+      Store.del('entryTab');
+      const btn = document.querySelector('.tab[data-tab="' + entry + '"]');
+      if (btn && !btn.classList.contains('hidden-mode')) showTab(entry);
+    }
+
+    window.addEventListener('hashchange', () => {
+      const m = modeFromHash();
+      if (m) applyMode(m);
+    });
 
     $('#btn-reset-all').onclick = () => {
       if (confirm(t('t_reset_confirm'))) {

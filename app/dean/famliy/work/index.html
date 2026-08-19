@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Vans AI Studio — Family Work</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" type="image/png" href="../../../assets/favicon.png">
+<meta name="theme-color" content="#0a0a13">
+<style>
+  :root {
+    --bg: #0a0a13; --card: #14152a; --bg2: #0f1020; --border: #272a4a;
+    --text: #eef0ff; --muted: #9aa2c0; --acc: #7c3aed; --acc2: #22d3ee;
+    --grad: linear-gradient(135deg, #7c3aed, #22d3ee);
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; min-height: 100vh; display: flex; align-items: center; justify-content: center;
+    padding: 22px; color: var(--text);
+    font-family: 'Segoe UI', 'Heebo', system-ui, -apple-system, sans-serif;
+    background: radial-gradient(1000px 520px at 75% -10%, #1c1440 0%, transparent 60%),
+                radial-gradient(800px 460px at -10% 110%, #062b33 0%, transparent 55%), var(--bg);
+  }
+  .card {
+    width: 460px; max-width: 100%; text-align: center;
+    background: linear-gradient(180deg, var(--card), var(--bg2));
+    border: 1px solid var(--border); border-radius: 18px; padding: 40px 32px;
+    box-shadow: 0 18px 50px rgba(0,0,0,.45);
+  }
+  .logo { width: 62px; height: 62px; margin-bottom: 16px; }
+  h1 { font-size: 22px; margin: 0 0 6px; }
+  .sub { color: var(--muted); font-size: 13.5px; margin: 0 0 4px; }
+  .fam {
+    display: inline-block; margin: 14px 0 22px; padding: 5px 14px; border-radius: 999px;
+    background: var(--bg2); border: 1px solid var(--border);
+    color: var(--acc2); font-size: 12px; letter-spacing: .4px;
+  }
+  .tools { display: flex; gap: 10px; margin-bottom: 24px; }
+  .tool {
+    flex: 1; background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 12px; padding: 16px 10px; text-decoration: none; color: var(--text);
+    transition: all .15s; display: block;
+  }
+  .tool:hover { border-color: var(--acc); transform: translateY(-2px); }
+  .tool .ico { font-size: 24px; display: block; margin-bottom: 6px; }
+  .tool .lbl { font-size: 13px; }
+  .go {
+    display: block; width: 100%; padding: 14px; border: none; border-radius: 12px;
+    background: var(--grad); color: #fff; font-size: 15.5px; font-weight: 600;
+    cursor: pointer; font-family: inherit; text-decoration: none;
+  }
+  .go:hover { filter: brightness(1.08); }
+  .note {
+    margin-top: 22px; padding-top: 18px; border-top: 1px solid var(--border);
+    color: var(--muted); font-size: 11.5px; line-height: 1.65; text-align: start;
+  }
+  .note b { color: #f0b23f; }
+  a.plain { color: var(--acc2); text-decoration: none; }
+  a.plain:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+
+<div class="card">
+  <svg class="logo" viewBox="0 0 48 48" aria-hidden="true">
+    <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#7c3aed"/><stop offset="1" stop-color="#22d3ee"/>
+    </linearGradient></defs>
+    <rect x="2" y="2" width="44" height="44" rx="11" fill="url(#g)"/>
+    <path d="M13 13 L24 36 L35 13" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="37" cy="11" r="3" fill="#fff"/>
+  </svg>
+
+  <h1>Vans AI Studio</h1>
+  <p class="sub">גרסת העבודה המשפחתית</p>
+  <span class="fam">DEAN · FAMLIY · WORK</span>
+
+  <div class="tools">
+    <a class="tool" href="../../../index.html#work" data-tab="docs">
+      <span class="ico">📄</span><span class="lbl">מסמכים</span>
+    </a>
+    <a class="tool" href="../../../index.html#work" data-tab="slides">
+      <span class="ico">📊</span><span class="lbl">מצגות</span>
+    </a>
+  </div>
+
+  <a class="go" href="../../../index.html#work">כניסה לגרסת העבודה ←</a>
+
+  <p class="note">
+    <b>שימו לב:</b> הכתובת הזו אינה מקושרת מאף מקום ואינה מופיעה בגוגל, אבל היא
+    <b>אינה מוגנת בסיסמה</b> — כל מי שיש לו את הקישור יכול לפתוח אותה, והקוד של האתר ציבורי.
+    אל תשמרו כאן מידע רגיש.
+    <br><br>
+    המסמכים והמצגות שאתם יוצרים נשמרים <b>רק במכשיר שלכם</b> ולא נשלחים לשום מקום.
+    <br><br>
+    <a class="plain" href="../../../index.html">← לגרסה המלאה (יצירה)</a>
+  </p>
+</div>
+
+<script>
+  // remember the edition and the chosen tool, so the app opens straight into it
+  document.querySelectorAll('.tool').forEach(function (el) {
+    el.addEventListener('click', function () {
+      try {
+        localStorage.setItem('vans.mode', JSON.stringify('work'));
+        localStorage.setItem('vans.entryTab', JSON.stringify(el.dataset.tab));
+      } catch (e) {}
+    });
+  });
+  document.querySelector('.go').addEventListener('click', function () {
+    try { localStorage.setItem('vans.mode', JSON.stringify('work')); } catch (e) {}
+  });
+</script>
+
+</body>
+</html>
