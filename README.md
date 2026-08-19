@@ -72,6 +72,13 @@ cd Vans-Ai-Studio && npm install && npm start
 - `Start-Web.bat` / `./start-web.sh` — גרסת דפדפן, בלי תלויות
 - `npm run dist:win` — בניית EXE מקומית
 
+> ⚠️ **אם `npm start` נכשל ב-Windows** — לפעמים `npm install` מוריד את Electron אבל
+> פריקת ה-ZIP נכשלת בשקט (אנטי־וירוס), ו-npm עדיין מדווח הצלחה. תיקון בפקודה אחת:
+>
+> ```powershell
+> powershell -ExecutionPolicy Bypass -File tools\fix-electron.ps1
+> ```
+
 קבצי ההתקנה לכל הפלטפורמות נבנים אוטומטית ב-GitHub Actions על כל תג `v*` (ראו `.github/workflows/release.yml`).
 
 ## 📖 הסבר טכני מלא / Full technical explanation
